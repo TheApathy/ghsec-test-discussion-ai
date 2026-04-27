@@ -1,0 +1,49 @@
+name: Discussion AI Test
+
+on:
+  discussion:
+    types: [created, edited]
+  discussion_comment:
+    types: [created, edited]
+
+permissions:
+  discussions: write
+  contents: read
+
+jobs:
+  moderate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log trigger info
+        run: |
+          echo "=== DISCUSSION AI TEST ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Author association: ${{ github.event.discussion.author_association }}"
+          echo "Discussion title: ${{ github.event.discussion.title }}"
+          echo "Discussion body: ${{ github.event.discussion.body }}"
+          echo "Comment body: ${{ github.event.comment.body }}"
+          echo "Fake token (should be redacted): ${{ secrets.FAKE_AI_TOKEN }}"
+          echo "==========================="
+      
+      - name: Simulate AI action
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const event = context.payload;
+            console.log('Event type:', context.eventName);
+            console.log('Actor:', context.actor);
+            
+            if (event.discussion) {
+              console.log('Discussion title:', event.discussion.title);
+              console.log('Discussion body length:', (event.discussion.body || '').length);
+            }
+            if (event.comment) {
+              console.log('Comment body length:', (event.comment.body || '').length);
+            }
+            
+            // Simulate what an AI moderator might do
+            const body = (event.comment?.body || event.discussion?.body || '').toLowerCase();
+            if (body.includes('malicious') || body.includes('hack')) {
+              console.log('⚠️ POTENTIALLY MALICIOUS CONTENT DETECTED');
+            }
