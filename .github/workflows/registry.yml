@@ -1,0 +1,19 @@
+name: Vector - Registry Package Trigger
+on:
+  registry_package:
+    types: [published, updated]
+
+jobs:
+  test-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log registry info
+        run: |
+          echo "=== REGISTRY PACKAGE TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Package: ${{ github.event.package.name }}"
+          echo "Package type: ${{ github.event.package.package_type }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "================================"

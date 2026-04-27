@@ -1,0 +1,18 @@
+name: Vector - Branch Protection Trigger
+on:
+  branch_protection_rule:
+    types: [created, edited, deleted]
+
+jobs:
+  test-branch-protection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log branch protection info
+        run: |
+          echo "=== BRANCH PROTECTION TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Rule: ${{ github.event.rule.name }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "================================="

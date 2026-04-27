@@ -1,0 +1,19 @@
+name: Vector - Status Trigger
+on: [status]
+
+jobs:
+  test-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log status info
+        run: |
+          echo "=== STATUS TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "State: ${{ github.event.state }}"
+          echo "Context: ${{ github.event.context }}"
+          echo "SHA: ${{ github.event.sha }}"
+          echo "Description: ${{ github.event.description }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "======================"
